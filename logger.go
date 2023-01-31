@@ -1,6 +1,7 @@
 package main
 
 import (
+	"io/ioutil"
 	"log"
 	"log/syslog"
 	"os"
@@ -9,7 +10,7 @@ import (
 const APPNAME = "NPTC "
 
 var (
-	Debug  = *log.Default()
+	Debug = *log.Default()
 	Info  = *log.Default()
 	Warn  = *log.Default()
 	Error = *log.Default()
@@ -26,22 +27,30 @@ func logger() {
 	if os.Getenv("SHELL") == "/bin/sh" {
 		Debug.Println("System Logger On")
 		syslogger()
-	}else{
-		Debug.SetPrefix("DEBUG ")
+	} else {
+		if debug == false {
+			Debug.SetOutput(ioutil.Discard)
+		} else {
+			Debug.SetPrefix("DEBUG ")
+			Debug.Println("System Logger Off")
+		}
 		Info.SetPrefix("INFO ")
 		Warn.SetPrefix("WARN ")
 		Error.SetPrefix("ERROR ")
-		Debug.Println("System Logger Off")
 	}
 }
 
 func syslogger() {
 
-	sysloggerD, err := syslog.New(syslog.LOG_CRON|syslog.LOG_DEBUG, APPNAME)
-	if err != nil {
-		log.Fatalln(err)
+	if debug == false {
+		Debug.SetOutput(ioutil.Discard)
+	} else {
+		sysloggerD, err := syslog.New(syslog.LOG_CRON|syslog.LOG_DEBUG, APPNAME)
+		if err != nil {
+			log.Fatalln(err)
+		}
+		Debug.SetOutput(sysloggerD)
 	}
-	Debug.SetOutput(sysloggerD)
 
 	sysloggerI, err := syslog.New(syslog.LOG_CRON|syslog.LOG_INFO, APPNAME)
 	if err != nil {

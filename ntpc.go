@@ -4,7 +4,6 @@ import (
 	"encoding/binary"
 	"flag"
 	"net"
-	"io/ioutil"
 	"os/exec"
 	"os/user"
 	"time"
@@ -59,6 +58,8 @@ type packet struct {
 	TxTimeFrac     uint32 // transmit time frac
 }
 
+var debug bool
+
 // This program implements a trivial NTP client over UDP.
 //
 // Usage:
@@ -66,7 +67,7 @@ type packet struct {
 func main() {
 	var err error
 	var host string
-	var save, debug bool
+	var save bool
 
 	flag.StringVar(&host, "e", "us.pool.ntp.org", "NTP host")
 	flag.BoolVar(&save, "s", false, "Update system date & time")
@@ -76,9 +77,6 @@ func main() {
 	host = host + ":123"
 
 	logger()
-	if debug == false {
-		Debug.SetOutput(ioutil.Discard)
-	}
 
 	if save && !isRoot() {
 		Warn.Println("System clock update can only be done by root")
@@ -130,7 +128,7 @@ func main() {
 	dateNTPF := dateNTP.Format(time.RFC3339Nano)
 
 	var updated = "Not Updated"
-	if save && dateLoc.Sub(dateNTP).Abs() > time.Millisecond * 100 {
+	if save && dateLoc.Sub(dateNTP).Abs() > time.Millisecond*100 {
 		out, err := exec.Command("/bin/date", "-s", dateNTPF).Output()
 		if err != nil {
 			Error.Fatalf("Date out: %v, cmd: %v", out, err)
