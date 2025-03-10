@@ -69,4 +69,9 @@ func syslogger() {
 		log.Fatalln(err)
 	}
 	Error.SetOutput(sysloggerE)
+
+	Debug.SetFlags(log.Lshortfile)
+	Info.SetFlags(log.Lshortfile)
+	Warn.SetFlags(log.Lshortfile)
+	Error.SetFlags(log.Lshortfile)
 }

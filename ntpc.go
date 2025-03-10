@@ -61,9 +61,6 @@ type packet struct {
 var debug bool
 
 // This program implements a trivial NTP client over UDP.
-//
-// Usage:
-// time -e <host endpoint as addr>
 func main() {
 	var err error
 	var host string
