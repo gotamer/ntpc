@@ -13,7 +13,7 @@ It also does:
 I use it to periodically update my Linux laptop system time.
 On my system it runs once an hour via a cron job.
 
-'''
+```
 // NTP packet format (v3 with optional v4 fields removed)
 //
 // 0                   1                   2                   3
@@ -43,7 +43,7 @@ On my system it runs once an hour via a cron job.
 // +                      Transmit Timestamp (64)                  +
 // |                                                               |
 // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-'''
+```
 
 
 
