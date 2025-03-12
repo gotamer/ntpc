@@ -1,0 +1,11 @@
+Name = "ntpc"
+Version = ""
+Package = "go.hansaray.pw/ntpc"
+Homepage = "http://go.hansaray.pw/ntpc"
+Repo = "github.com/gotamer/ntpc.git"
+Branch = 'master' 
+Title = "NTP Client"
+Description = "Implementation of an NTP client in Go"
+Documentation = "https://pkg.go.dev/go.hansaray.pw/ntpc"
+Tags = ["ntp","RFC5905","client","golang"]
+License = 'MIT'
