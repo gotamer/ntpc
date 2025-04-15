@@ -133,7 +133,7 @@ func main() {
 		updated = "Updated"
 	}
 
-	Info.Printf("Time Diff %s: %v", updated, dateLoc.Sub(dateNTP))
+	Debug.Printf("Time Diff %s: %v", updated, dateLoc.Sub(dateNTP))
 	Debug.Println("Time Local: ", dateLoc.Format(time.RFC3339Nano))
 	Debug.Println("Time NTP  : ", dateNTPF)
 }
