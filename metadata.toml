@@ -1,5 +1,5 @@
 Name = "ntpc"
-Version = ""
+Version = "v1.0.1"
 Package = "go.hansaray.pw/ntpc"
 Homepage = "http://go.hansaray.pw/ntpc"
 Repo = "github.com/gotamer/ntpc.git"
