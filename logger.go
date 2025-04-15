@@ -1,7 +1,7 @@
 package main
 
 import (
-	"io/ioutil"
+	"io"
 	"log"
 	"log/syslog"
 	"os"
@@ -25,11 +25,11 @@ func init() {
 
 func logger() {
 	if os.Getenv("SHELL") == "/bin/sh" {
-		Debug.Println("System Logger On")
+		//Debug.Println("System Logger On")
 		syslogger()
 	} else {
-		if debug == false {
-			Debug.SetOutput(ioutil.Discard)
+		if !debug {
+			Debug.SetOutput(io.Discard)
 		} else {
 			Debug.SetPrefix("DEBUG ")
 			Debug.Println("System Logger Off")
@@ -42,8 +42,8 @@ func logger() {
 
 func syslogger() {
 
-	if debug == false {
-		Debug.SetOutput(ioutil.Discard)
+	if !debug {
+		Debug.SetOutput(io.Discard)
 	} else {
 		sysloggerD, err := syslog.New(syslog.LOG_CRON|syslog.LOG_DEBUG, APPNAME)
 		if err != nil {

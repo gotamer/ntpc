@@ -1,5 +1,5 @@
-# NTP Client
-============
+NTP Client
+==========
 
 [![GoDoc](https://img.shields.io/badge/GoDoc-Reference-blue?style=for-the-badge&logo=go)](https://pkg.go.dev/github.com/gotamer/ntpc?tab=doc)
 
@@ -12,6 +12,8 @@ It also does:
 
 I use it to periodically update my Linux laptop system time.
 On my system it runs once an hour via a cron job.
+
+It works well, and is stable. I been running it for years.
 
 
 This is a fork of Vladimir Vivien's go-ntp-client. (Thank you Vladimir)  
