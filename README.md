@@ -30,6 +30,9 @@ OR
 # ntpc -s -e 10.10.10.1
 ```
 
+NTP packet format
+-----------------
+This info is for coders!
 ```
 // NTP packet format (v3 with optional v4 fields removed)
 //
