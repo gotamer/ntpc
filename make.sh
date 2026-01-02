@@ -90,7 +90,9 @@ release() {
 	wait
 	env GOOS=linux GOARCH=amd64 go build -o="${DIRBIN}/${APPNAME}-linux-amd64" -ldflags="${LDFLAGS[*]}" 
 	wait
-	env GOOS=linux GOARCH=arm go build -o="${DIRBIN}/${APPNAME}-linux-arm" -ldflags="${LDFLAGS[*]}" 
+	env GOOS=linux GOARCH=arm GOARM=6 go build -o="${DIRBIN}/${APPNAME}-linux-arm6" -ldflags="${LDFLAGS[*]}" 
+	wait
+	env GOOS=linux GOARCH=arm GOARM=7 go build -o="${DIRBIN}/${APPNAME}-linux-arm7" -ldflags="${LDFLAGS[*]}" 
 	wait
 	env GOOS=linux GOARCH=arm64 go build -o="${DIRBIN}/${APPNAME}-linux-arm64" -ldflags="${LDFLAGS[*]}" 
 	wait

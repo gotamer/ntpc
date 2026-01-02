@@ -13,6 +13,17 @@ Installation
 ------------
 
 - Download the latest release for your OS from [here](https://github.com/gotamer/ntpc/releases)
+
+**Mapping Raspberry Pi Models to Architectures**
+| Raspberry Pi Model | Architecture |
+|-------------------|----------------|
+| Raspberry Pi 1 (A, B, A+, B+), Zero, Zero W | `arm6` |
+| Raspberry Pi 2 (v1.1) | `arm7` |
+| Raspberry Pi 2 (v1.2), 3, 3+, CM3 | `arm7` |
+| Raspberry Pi 4, 400, CM4 (32-bit OS) | `arm7` |
+| Raspberry Pi 4, 400, CM4 (64-bit OS) | `arm64` |
+| Raspberry Pi 5 (64-bit OS) | `arm64` |
+
 - Rename the executable to ntpc
 
 Usage
