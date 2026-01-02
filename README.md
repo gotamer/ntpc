@@ -9,9 +9,17 @@ A simple Network Time Protocol (NTP) Client
 This NTP Client is specially designd for computers without a hardware clock, 
 such as the Raspberry Pi, and for Laptops.
 
-```bash
+Installation
+------------
+
+- Download the latest release for your OS from [here](https://github.com/gotamer/ntpc/releases)
+- Rename the executable to ntpc
+
+Usage
+----------
+```
 Usage of ntpc:
-  -d	Show detailed results
+  -d	Show detailed debug results
   -e string
     	NTP host (default "pool.ntp.org")
   -s	Update system date & time
