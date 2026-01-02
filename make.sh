@@ -30,8 +30,9 @@ GOCGO=$(go env CGO_ENABLED)
 echo "[INF] LDFLAGS: ${LDFLAGS[*]}"
 
 echo "[INF] setting build env"
+export GO111MODULE="off"
 go env -w CGO_ENABLED=0
-go env -w GO111MODULE=on
+go env -w GO111MODULE=off
 
 # Just edit: Title, Description, and Tags
 metadata() {
@@ -54,6 +55,12 @@ dirBin() {
 		GOBIN="${ROOTDIR}/bin"
 		mkdir -p "${ROOTDIR}/bin"
 	fi
+	if [ ! -d "$DIRBIN" ]; then
+		DIRBIN="${ROOTDIR}/bin"
+		mkdir -p "${ROOTDIR}/bin"
+	fi
+	echo "[INF] GOBIN: $GOBIN"
+	echo "[INF] DIRBIN: $DIRBIN"
 }
 
 fmt() {
@@ -79,21 +86,21 @@ release() {
 	wait
 	dirBin
 	wait
-	env GOOS=linux GOARCH=386 go build -o="${GOBIN}/${APPNAME}-linux-386" -ldflags="${LDFLAGS[*]}" 
+	env GOOS=linux GOARCH=386 go build -o="${DIRBIN}/${APPNAME}-linux-386" -ldflags="${LDFLAGS[*]}" 
 	wait
-	env GOOS=linux GOARCH=amd64 go build -o="${GOBIN}/${APPNAME}-linux-amd64" -ldflags="${LDFLAGS[*]}" 
+	env GOOS=linux GOARCH=amd64 go build -o="${DIRBIN}/${APPNAME}-linux-amd64" -ldflags="${LDFLAGS[*]}" 
 	wait
-	env GOOS=linux GOARCH=arm go build -o="${GOBIN}/${APPNAME}-linux-arm" -ldflags="${LDFLAGS[*]}" 
+	env GOOS=linux GOARCH=arm go build -o="${DIRBIN}/${APPNAME}-linux-arm" -ldflags="${LDFLAGS[*]}" 
 	wait
-	env GOOS=linux GOARCH=arm64 go build -o="${GOBIN}/${APPNAME}-linux-arm64" -ldflags="${LDFLAGS[*]}" 
+	env GOOS=linux GOARCH=arm64 go build -o="${DIRBIN}/${APPNAME}-linux-arm64" -ldflags="${LDFLAGS[*]}" 
 	wait
-	env GOOS=linux GOARCH=mips go build -o="${GOBIN}/${APPNAME}-linux-mips" -ldflags="${LDFLAGS[*]}" 
+	env GOOS=linux GOARCH=mips go build -o="${DIRBIN}/${APPNAME}-linux-mips" -ldflags="${LDFLAGS[*]}" 
 	wait
-	env GOOS=linux GOARCH=mips64 go build -o="${GOBIN}/${APPNAME}-linux-mips64" -ldflags="${LDFLAGS[*]}" 
+	env GOOS=linux GOARCH=mips64 go build -o="${DIRBIN}/${APPNAME}-linux-mips64" -ldflags="${LDFLAGS[*]}" 
 	wait
-	env GOOS=linux GOARCH=riscv64 go build -o="${GOBIN}/${APPNAME}-linux-riscv64" -ldflags="${LDFLAGS[*]}" 
+	env GOOS=linux GOARCH=riscv64 go build -o="${DIRBIN}/${APPNAME}-linux-riscv64" -ldflags="${LDFLAGS[*]}" 
 	wait
-	env GOOS=freebsd GOARCH=amd64 go build -o="${GOBIN}/${APPNAME}-freebsd-amd64" -ldflags="${LDFLAGS[*]}" 
+	env GOOS=freebsd GOARCH=amd64 go build -o="${DIRBIN}/${APPNAME}-freebsd-amd64" -ldflags="${LDFLAGS[*]}" 
 	wait
 }
 
