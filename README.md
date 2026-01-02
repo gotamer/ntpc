@@ -17,6 +17,7 @@ Installation
 
 Usage
 ----------
+Run manually, at system start as a service, and/or as a cron job
 ```
 Usage of ntpc:
   -d	Show detailed debug results
