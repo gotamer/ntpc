@@ -15,6 +15,11 @@ Usage of ntpc:
   -e string
     	NTP host (default "pool.ntp.org")
   -s	Update system date & time
+
+Example:
+# ntpc -s -e en.pool.ntp.org
+OR
+# ntpc -s -e 10.10.10.1
 ```
 
 ```
