@@ -3,17 +3,19 @@ NTP Client
 
 [![GoDoc](https://img.shields.io/badge/GoDoc-Reference-blue?style=for-the-badge&logo=go)](https://pkg.go.dev/github.com/gotamer/ntpc?tab=doc)
 
-This is an implementation of a simple NTP client in Go. It uses the `encoding/binary` package to encode and decode NTP packets sent to and received from a remote NTP server over UDP.
+A simple Network Time Protocol (NTP) Client
+-------------------------------------------
 
-It also does:
+This NTP Client is specially designd for computers without a hardware clock, 
+such as the Raspberry Pi, and for Laptops.
 
-- log via linux syslog
-- local date update
-
-I use it to periodically update my Linux laptop system time.
-On my system it runs once an hour via a cron job.
-
-It works well, and is stable. I been running it for years.
+```bash
+Usage of ntpc:
+  -d	Show detailed results
+  -e string
+    	NTP host (default "pool.ntp.org")
+  -s	Update system date & time
+```
 
 ```
 // NTP packet format (v3 with optional v4 fields removed)
@@ -46,7 +48,6 @@ It works well, and is stable. I been running it for years.
 // |                                                               |
 // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 ```
-
 
 
 This is a fork of Vladimir Vivien's go-ntp-client. (Thank you Vladimir)  
