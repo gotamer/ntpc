@@ -4,6 +4,7 @@ import (
 	"encoding/binary"
 	"flag"
 	"net"
+	"os"
 	"os/exec"
 	"os/user"
 	"time"
@@ -65,8 +66,9 @@ func main() {
 	var err error
 	var host string
 	var save bool
+	var conn net.Conn
 
-	flag.StringVar(&host, "e", "us.pool.ntp.org", "NTP host")
+	flag.StringVar(&host, "e", "pool.ntp.org", "NTP host")
 	flag.BoolVar(&save, "s", false, "Update system date & time")
 	flag.BoolVar(&debug, "d", false, "Show detailed results")
 	flag.Parse()
@@ -76,14 +78,24 @@ func main() {
 	logger()
 
 	if save && !isRoot() {
-		Warn.Println("System clock update can only be done by root")
+		Error.Println("System clock update can only be done by root")
 		save = false
 	}
 
 	// Setup a UDP connection
-	conn, err := net.Dial("udp", host)
+	conn, err = net.Dial("udp", host)
 	if err != nil {
-		Error.Fatalf("Failed to connect: %v", err)
+		// Fallback host
+		if host != "pool.ntp.org" {
+			conn, err = net.Dial("udp", "pool.ntp.org")
+			if err != nil {
+				Error.Fatalf("Failed to connect: %v", err)
+				os.Exit(1)
+			}
+		} else {
+			Error.Fatalf("Failed to connect: %v", err)
+			os.Exit(1)
+		}
 	}
 	defer conn.Close()
 	Debug.Printf("Connected to %v", host)
@@ -109,7 +121,8 @@ func main() {
 	rsp := &packet{}
 	dateLoc := time.Now()
 	if err := binary.Read(conn, binary.BigEndian, rsp); err != nil {
-		Error.Fatalf("Failed to read server response: %v", err)
+		Error.Fatalf("Failed to read server response, may not be an NTP server: %v", err)
+		os.Exit(1)
 	}
 
 	// On POSIX-compliant OS, time is expressed
