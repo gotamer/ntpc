@@ -70,37 +70,33 @@ func main() {
 
 	flag.StringVar(&host, "e", "pool.ntp.org", "NTP host")
 	flag.BoolVar(&save, "s", false, "Update system date & time")
-	flag.BoolVar(&debug, "d", false, "Show detailed results")
+	flag.BoolVar(&debug, "d", false, "Verbose results")
 	flag.Parse()
-
-	host = host + ":123"
 
 	logger()
 
 	if save && !isRoot() {
-		Error.Println("System clock update can only be done by root")
 		save = false
+		Error.Fatalln("System clock update can only be done by root")
 	}
 
 	// Setup a UDP connection
-	conn, err = net.Dial("udp", host)
+	conn, err = net.Dial("udp", host+":123")
 	if err != nil {
 		// Fallback host
 		if host != "pool.ntp.org" {
-			conn, err = net.Dial("udp", "pool.ntp.org")
+			conn, err = net.Dial("udp", "pool.ntp.org:123")
 			if err != nil {
-				Error.Fatalf("Failed to connect: %v", err)
-				os.Exit(1)
+				Error.Fatalf("Failed to connect: %v\n", err)
 			}
 		} else {
-			Error.Fatalf("Failed to connect: %v", err)
-			os.Exit(1)
+			Error.Fatalf("Failed to connect: %v\n", err)
 		}
 	}
 	defer conn.Close()
 	Debug.Printf("Connected to %v", host)
 
-	if err = conn.SetDeadline(time.Now().Add(15 * time.Second)); err != nil {
+	if err = conn.SetDeadline(time.Now().Add(5 * time.Second)); err != nil {
 		Error.Fatalf("Failed to set deadline: %v", err)
 	}
 	Debug.Print("Got responce")
