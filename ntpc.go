@@ -3,11 +3,15 @@ package main
 import (
 	"encoding/binary"
 	"flag"
+	"fmt"
 	"net"
 	"os"
 	"os/exec"
 	"os/user"
 	"time"
+
+	"go.hansaray.pw/lib/log"
+	"go.hansaray.pw/lib/version"
 )
 
 const ntpEpochOffset = 2208988800
@@ -60,6 +64,7 @@ type packet struct {
 }
 
 var debug bool
+var vers bool
 
 // This program implements a trivial NTP client over UDP.
 func main() {
@@ -71,13 +76,20 @@ func main() {
 	flag.StringVar(&host, "e", "pool.ntp.org", "NTP host")
 	flag.BoolVar(&save, "s", false, "Update system date & time")
 	flag.BoolVar(&debug, "d", false, "Verbose results")
+	flag.BoolVar(&vers, "v", false, "Print version and exit")
 	flag.Parse()
 
-	logger()
+	if debug {
+		log.Verbose(4)
+	}
+	if vers {
+		fmt.Println(version.Version)
+	}
 
 	if save && !isRoot() {
 		save = false
-		Error.Fatalln("System clock update can only be done by root")
+		log.Error.Fatalln("System clock update can only be done by root")
+		os.Exit(1)
 	}
 
 	// Setup a UDP connection
@@ -87,19 +99,22 @@ func main() {
 		if host != "pool.ntp.org" {
 			conn, err = net.Dial("udp", "pool.ntp.org:123")
 			if err != nil {
-				Error.Fatalf("Failed to connect: %v\n", err)
+				log.Error.Fatalf("Failed to connect: %v\n", err)
+				os.Exit(1)
 			}
 		} else {
-			Error.Fatalf("Failed to connect: %v\n", err)
+			log.Error.Fatalf("Failed to connect: %v\n", err)
+			os.Exit(1)
 		}
 	}
 	defer conn.Close()
-	Debug.Printf("Connected to %v", host)
+	log.Debug.Printf("Connected to %v", host)
 
 	if err = conn.SetDeadline(time.Now().Add(5 * time.Second)); err != nil {
-		Error.Fatalf("Failed to set deadline: %v", err)
+		log.Error.Fatalf("Failed to set deadline: %v", err)
+		os.Exit(1)
 	}
-	Debug.Print("Got responce")
+	log.Debug.Print("Got responce")
 
 	// configure request settings by specifying the first byte as
 	// 00 011 011 (or 0x1B)
@@ -110,14 +125,15 @@ func main() {
 
 	// send time request
 	if err = binary.Write(conn, binary.BigEndian, req); err != nil {
-		Error.Fatalf("failed to send request: %v", err)
+		log.Error.Fatalf("failed to send request: %v", err)
+		os.Exit(1)
 	}
 
 	// block to receive server response
 	rsp := &packet{}
 	dateLoc := time.Now()
 	if err := binary.Read(conn, binary.BigEndian, rsp); err != nil {
-		Error.Fatalf("Failed to read server response, may not be an NTP server: %v", err)
+		log.Error.Fatalf("Failed to read server response, may not be an NTP server: %v", err)
 		os.Exit(1)
 	}
 
@@ -137,20 +153,21 @@ func main() {
 	if save && dateLoc.Sub(dateNTP).Abs() > time.Millisecond*100 {
 		out, err := exec.Command("/bin/date", "-s", dateNTPF).Output()
 		if err != nil {
-			Error.Fatalf("Date out: %v, cmd: %v", out, err)
+			log.Error.Fatalf("Date out: %v, cmd: %v", out, err)
 		}
 		updated = "Updated"
 	}
 
-	Debug.Printf("Time Diff %s: %v", updated, dateLoc.Sub(dateNTP))
-	Debug.Println("Time Local: ", dateLoc.Format(time.RFC3339Nano))
-	Debug.Println("Time NTP  : ", dateNTPF)
+	log.Debug.Printf("Time Diff %s: %v", updated, dateLoc.Sub(dateNTP))
+	log.Debug.Println("Time Local: ", dateLoc.Format(time.RFC3339Nano))
+	log.Debug.Println("Time NTP  : ", dateNTPF)
 }
 
 func isRoot() bool {
 	currentUser, err := user.Current()
 	if err != nil {
-		Error.Fatalf("[isRoot] Unable to get current user: %s", err)
+		log.Error.Fatalf("[isRoot] Unable to get current user: %s", err)
+		os.Exit(1)
 	}
 	return currentUser.Username == "root"
 }

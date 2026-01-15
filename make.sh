@@ -16,11 +16,12 @@ BUILD_TIME=$(date '+%Y-%m-%dT%H:%M:%S')
 BUILD_USER=$(id -u -n)
 
 LDFLAGS=("-s -w "
-  "-X '${PACKAGE}/version.AppName=${APPNAME}'"
-  "-X '${PACKAGE}/version.Version=${VERSION}'"
-  "-X '${PACKAGE}/version.CommitHash=${COMMIT_HASH}'"
-  "-X '${PACKAGE}/version.BuildTime=${BUILD_TIME}'"
-  "-X '${PACKAGE}/version.UserName=${BUILD_USER}'"
+  "-X 'go.hansaray.pw/lib/version.AppName=${APPNAME}'"
+  "-X 'go.hansaray.pw/lib/version.Version=${VERSION}'"
+  "-X 'go.hansaray.pw/lib/version.CommitHash=${COMMIT_HASH}'"
+  "-X 'go.hansaray.pw/lib/version.BuildTime=${BUILD_TIME}'"
+  "-X 'go.hansaray.pw/lib/version.Branch=${BRANCH}'"
+  "-X 'go.hansaray.pw/lib/version.UserName=${BUILD_USER}'"
 )
 
 # Remember Go env settings, so we can set them back
@@ -69,6 +70,7 @@ fmt() {
 }
 
 build() {
+	metadata
 	fmt
 	wait
 	echo "[INF] build & install ${APPNAME}"
